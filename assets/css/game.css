@@ -5,6 +5,10 @@
 
 }
 
+body {
+    font-family: 'Titillium Web', sans-serif;
+  }
+
 .choice-container {
     display: flex;
     margin-bottom: 0.5rem;
