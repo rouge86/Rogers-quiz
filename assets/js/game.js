@@ -31,80 +31,56 @@ let questionCounter = 0;
 let availableQuestions = [];
 
 // Array of objects
-let questions = [
-    
-    /* Hardcoded Qs for debugging
-    {
-        question: "inside which HTML element do we put the Javascript?",
-        choice1: "<script>",
-        choice2: "<javascript>",
-        choice3: "<js>",
-        choice4: "<scripting>",
-        answer: 1
-    },
+let questions = [];
 
-    {
-        question: "What is the correct syntax for referring to an external script called 'xx.js'?",
-        choice1: "<script href='xx.js'>",
-        choice2: "<script name='xx.js'>",
-        choice3: "<script src='xx.js'>",
-        choice4: "<script file='xx.js'>",
-        answer: 3
-    },
-
-    {
-        question: "How do you write 'Hello World' in an alert box?",
-        choice1: "msgBox('Hello World');",
-        choice2: "alertBox('Hello World');",
-        choice3: "msg('Hello World');",
-        choice4: "alert('Hello World');",
-        answer: 4
-    },
-    */
-];
-
-//promise
-fetch('https://opentdb.com/api.php?amount=5&category=9&difficulty=easy&type=multiple')
-    .then( res => {
-    return res.json();
+//promise trivia database source via trivia api - https://opentdb.com/api_config.php - insert link here:
+fetch('https://opentdb.com/api.php?amount=10&category=18&difficulty=easy&type=multiple')
+.then((res) => {
+  return res.json();
 })
-    .then(loadedQuestions => {
-    console.log(loadedQuestions.results);
-    questions = loadedQuestions.results.map(loadedQuestion =>{
-        const formattedQuestion = {
-            question: loadedQuestion.question
-        };
+.then((loadedQuestions) => {
+  questions = loadedQuestions.results.map((loadedQuestion) => {
+      const formattedQuestion = {
+          question: loadedQuestion.question,
+      };
 
-        const answerChoices = [ ...loadedQuestion.incorrect_answers];
-        formattedQuestion.answer = Math.floor(Math.random() * 3) + 1;
-        answerChoices.splice(formattedQuestion.answer -1, 0, loadedQuestion.correct_answer);
+      const answerChoices = [...loadedQuestion.incorrect_answers];
+      formattedQuestion.answer = Math.floor(Math.random() * 4) + 1;
+      answerChoices.splice(
+          formattedQuestion.answer - 1,
+          0,
+          loadedQuestion.correct_answer
+      );
 
-        answerChoices.forEach((choice, index) => {
-            formattedQuestion["choice" + (index+1)] = choice;
-        });
+      answerChoices.forEach((choice, index) => {
+          formattedQuestion['choice' + (index + 1)] = choice;
+      });
 
-        return formattedQuestion;
-    });
-    //questions = loadedQuestions;
-    startGame();
+      return formattedQuestion;
+  });
+
+  startGame();
 })
 
-//error scenario, part of promise
-.catch((err) => {
-    console.error(err);
+.catch(error => {
+  console.error('There has been a problem with your fetch operation:', error);
+  //previously 'TypeError: Failed to fetch' due to the source, however this is easily rememedied by returning a reload of game.html
+  return window.location.assign("./game.html");
+
+
 });
 
 //Constants
 const CORRECT_BONUS = 10;
 const MAX_QUESTIONS = 3;
+const SECOND = 1;
 
 startGame = () => {
-    timerCount = 10;
+    timerCount = 20;
     questionCounter = 0;
     score = 0;
     // doing ...questions, turns it into a copy into availableQuestions array, instead of than doing availableQuestions = questions which would lead to conflicts if we adjust either variable
     availableQuestions = [ ...questions];
-    //console.log(availableQuestions);
     getNewQuestion();
     game.classList.remove('hidden');
     loader.classList.add('hidden');
@@ -148,7 +124,7 @@ choices.forEach(choice => {
         const selectedChoice = e.target;
         const selectedAnswer = selectedChoice.dataset["number"];
 
-        //Ternary Syntax 
+        //Ternary Syntax - correct or incorrect
         const classToApply = selectedAnswer == currentQuestion.answer ? "correct" : "incorrect";
        console.log(classToApply);
 
@@ -159,6 +135,11 @@ choices.forEach(choice => {
        //Adds correctness colour class red or green
        selectedChoice.parentElement.classList.add(classToApply);
 
+       if(classToApply !== 'correct') {
+        decrementTimer(SECOND);
+        selectedChoice.parentElement.classList.add(classToApply);
+
+       }
     
        //Removes colour class 
        setTimeout(() =>{
@@ -173,7 +154,15 @@ choices.forEach(choice => {
 incrementScore = num => {
     score += num;
     scoreText.innerText = score;
+
 };
+
+//Decrement Timer function
+decrementTimer = num => {
+    timerCount -= num;
+    timerElement.innerText = "-1s " + timerCount;
+};
+
 
 // The setTimer function starts and stops the timer and triggers winGame() and loseGame()
 function startTimer() {
@@ -190,55 +179,4 @@ function startTimer() {
 
       }
     }, 1000);
-  }
-/* Not sure if this is applicable yet
-// The winGame function is called when the win condition is met
-function winGame() {
-    winCounter++
-    setWins()
-  }
-  
-  // The loseGame function is called when timer reaches 0
-  function loseGame() {
-    loseCounter++
-    setLosses()
-  }
-  
-
-// Updates win count on screen and sets win count to client storage
-function setWins() {
-    score.textContent = winCounter;
-    localStorage.setItem("winCount", winCounter);
-  }
-  
-  // Updates lose count on screen and sets lose count to client storage
-  function setLosses() {
-    score.textContent = loseCounter;
-    localStorage.setItem("loseCount", loseCounter);
-  }
-  
-
-// These functions are used by init
-function getWins() {
-    // Get stored value from client storage, if it exists
-    var storedWins = localStorage.getItem("winCount");
-    // If stored value doesn't exist, set counter to 0
-    if (storedWins === null) {
-      winCounter = 0;
-    } else {
-      // If a value is retrieved from client storage set the winCounter to that value
-      winCounter = storedWins;
-    }
-    //Render win count to page
-    win.textContent = winCounter;
-  }
-  
-  function getlosses() {
-    var storedLosses = localStorage.getItem("loseCount");
-    if (storedLosses === null) {
-      loseCounter = 0;
-    } else {
-      loseCounter = storedLosses;
-    }
-    lose.textContent = loseCounter;
-  } */
+  };

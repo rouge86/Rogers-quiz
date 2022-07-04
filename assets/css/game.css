@@ -1,3 +1,10 @@
+:root {
+--beige: rgb(255, 249, 236);
+--mustard: rgb(255, 220, 150);
+--shadow: rgba(188, 174, 125, 0.5);
+
+}
+
 .choice-container {
     display: flex;
     margin-bottom: 0.5rem;
@@ -10,14 +17,14 @@
 .choice-container:hover {
     /* If we were using SASS would could repeat these styles more easily */
     cursor: pointer;
-    box-shadow: 0 0.4rem 1.4rem 0 rgba(86, 185,235, 0.5);
+    box-shadow: 0 0.4rem 1.4rem 0 var(--shadow);
     transform: translateY(-0.1rem);
     transition: transform 150ms;
 }
 
 .choice-prefix {
     padding: 1.5rem 2.5rem;
-    background-color: #56a5eb;
+    background-color: var(--mustard);
     color: white;
 }
 
@@ -53,7 +60,7 @@
 #loader {
     border: 1.6rem solid white;
     border-radius: 50%;
-    border-top:1.6rem solid #56a5eb;
+    border-top:1.6rem solid var(--mustard);
     width:12rem;
     height:12rem;
     animation: spin 2s linear infinite;
