@@ -11,7 +11,7 @@ Build a timed coding quiz with multiple-choice questions. This app will run in t
 ![alt text](https://github.com/rouge86/Rogers-Password-Generator-Challenge-03/blob/main/rogers-password-gen.png?raw=true)
 
 ## Link to live page
-(https://rouge86.github.io/Rogers-Password-Generator-Challenge-03/)
+(https://rouge86.github.io/Rogers-quiz-tutorial/)
 
 
 ## Description
