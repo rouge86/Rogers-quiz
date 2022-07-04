@@ -14,7 +14,6 @@ finalScore.innerText = mostRecentScore;
 
 
 username.addEventListener('keyup', ()=> {
-    //console.log(username.value);
     //validation if nothing inthere disable save button
     saveScoreBtn.disabled = !username.value;
 });
