@@ -11,7 +11,7 @@ Build a timed coding quiz with multiple-choice questions. This app will run in t
 ![alt text](https://github.com/rouge86/Rogers-quiz-tutorial/blob/5669da4819d57ed2d51389be85af61af71500eab/rogersquiz.png?raw=true)
 
 ## Link to live page
-(https://rouge86.github.io/Rogers-quiz-tutorial/)
+(https://rouge86.github.io/Rogers-quiz/)
 
 
 ## Description
